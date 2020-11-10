@@ -1,12 +1,6 @@
 package sample;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.event.ActionEvent;
-
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -38,10 +32,6 @@ public class AdminControlPanel {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(new User("Root"));
 
     }
-
-
-
-
 
 
 

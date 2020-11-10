@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AdminControlPanel">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -52,16 +60,16 @@
             <Font size="18.0" />
           </font>
         </Label>
-            <Button fx:id="btn_msg" layoutX="450.0" layoutY="14.0" mnemonicParsing="false" onAction="#pressAddUser" prefHeight="43.0" prefWidth="176.0" text="Add User" />
-            <Button layoutX="450.0" layoutY="64.0" mnemonicParsing="false" onAction="#pressAddGroupButton" prefHeight="43.0" prefWidth="176.0" text="Add Group" />
-            <Button layoutX="450.0" layoutY="234.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="176.0" text="Show Group Total" />
-            <Button layoutX="258.0" layoutY="236.0" mnemonicParsing="false" onAction="#pressShowUserTotal" prefHeight="61.0" prefWidth="182.0" text="Show User Total" />
-            <Button layoutX="450.0" layoutY="303.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="176.0" text="Show Positive Percentage" />
-            <Button layoutX="258.0" layoutY="304.0" mnemonicParsing="false" onAction="#pressShowMessagesTotal" prefHeight="55.0" prefWidth="182.0" text="Show Messages Total" />
-            <TextArea layoutX="248.0" layoutY="14.0" prefHeight="43.0" prefWidth="192.0" text="sample.User Id&#10;" />
-            <TextArea layoutX="248.0" layoutY="64.0" prefHeight="43.0" prefWidth="192.0" text="Group Id" />
-            <Button layoutX="251.0" layoutY="120.0" mnemonicParsing="false" onAction="#pressOpenUserView" prefHeight="43.0" prefWidth="378.0" text="Open User View" />
-            <TreeView layoutX="14.0" layoutY="14.0" prefHeight="345.0" prefWidth="212.0" />
+        <Button layoutX="450.0" layoutY="14.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="176.0" text="Add User" />
+        <Button layoutX="450.0" layoutY="64.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="176.0" text="Add Group" />
+        <Button layoutX="450.0" layoutY="234.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="176.0" text="Show Group Total" />
+        <Button layoutX="258.0" layoutY="236.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="182.0" text="Show User Total" />
+        <Button layoutX="450.0" layoutY="303.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="176.0" text="Show Positive Percentage" />
+        <Button layoutX="258.0" layoutY="304.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="182.0" text="Show Messages Total" />
+        <TextArea layoutX="248.0" layoutY="14.0" prefHeight="43.0" prefWidth="192.0" text="User Id&#10;" />
+        <TextArea layoutX="248.0" layoutY="64.0" prefHeight="43.0" prefWidth="192.0" text="Group Id" />
+        <Button layoutX="251.0" layoutY="120.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="378.0" text="Open User View" />
+        <TreeView layoutX="14.0" layoutY="14.0" prefHeight="345.0" prefWidth="212.0" />
       </children>
     </AnchorPane>
   </children>
