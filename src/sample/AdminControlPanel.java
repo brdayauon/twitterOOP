@@ -15,9 +15,24 @@ import java.util.ArrayList;
 public class AdminControlPanel {
 
     //Singleton Pattern
-    private static AdminControlPanel instance = new AdminControlPanel();
+    private static AdminControlPanel instance;
 
-    private JTree treeView;
+    public static AdminControlPanel getInstance(){
+        if (instance == null)
+            instance = new AdminControlPanel();
+
+        return instance;
+    }
+
+    private AdminControlPanel(){
+        totalUsers = 0;
+        totalGroups = 0;
+
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(new User("Root"));
+
+    }
+
+
 
     private int totalUsers;
     private int totalGroups;
@@ -26,18 +41,10 @@ public class AdminControlPanel {
     public ArrayList<String> users;
     public ArrayList<String> uniqueGroupIDs;
 
-    private AdminControlPanel(){
-        totalUsers = 0;
-        totalGroups = 0;
 
-        treeView = new JTree();
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(new User("Root"));
 
+    public void addUser(String user){
     }
-    public static AdminControlPanel getInstance(){
-        return instance;
-    }
-
 
 
 
