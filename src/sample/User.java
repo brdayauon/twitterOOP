@@ -1,14 +1,19 @@
+package sample;
+
+import java.rmi.server.UID;
 import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     private final String uID;
-    private final ArrayList<User>[] following;
-    private final ArrayList<String>[] newsFeedList;
-    private final ArrayList<User>[] followers;
+    private final List<String> following;
+    private final List<String> newsFeedList;
+    private final List<User> followers;
 
     private int totalNumberOfUsers = 0;
     private int totalNumberOfGroups = 0;
     private int totalNumberOfTweets = 0;
+    private int totalNumberOfPositiveCount = 0;
     private String[] positiveWords = { "good", "great", "excellent", };
 
     /*
@@ -17,14 +22,15 @@ public class User {
         3) a list of user IDs being followed by this user (followings); 
         4) a news feed list containing a list of Twitter messages.
     */
-    public User (String uID, ArrayList<User>following[], ArrayList<User>followers[], ArrayList<String>newsFeedList[]){
-        this.uID = uID;
-        this.followers = followers;
-        this.following = following;
-        this.newsFeedList = newsFeedList;
-        totalNumberOfUsers += 1;
 
+    public User (String uID){
+        this.uID = uID;
+        followers = new ArrayList<>();
+        following = new ArrayList<>();
+        newsFeedList = new ArrayList<>();
+        totalNumberOfUsers += 1;
     }
+
     /*Users can choose to follow other users (not user groups) by providing the target user ID.
     Unfollow is not required. Users can also post a short Tweet message (a String),
     so that all the followers can see this message in their news feed lists.
@@ -50,5 +56,14 @@ public class User {
     public int getTotalNumberOfTweets(){
         return totalNumberOfTweets;
     }
-    
+    public int getTotalNumberOfPositiveCount() {return totalNumberOfPositiveCount;}
+
+    public void follow(String user){
+        following.add(user);
+    }
+
+    @Override
+    public String toString() {
+        return uID;
+    }
 }
