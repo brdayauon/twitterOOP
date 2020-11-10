@@ -58,12 +58,28 @@ public class User {
     }
     public int getTotalNumberOfPositiveCount() {return totalNumberOfPositiveCount;}
 
-    public void follow(String user){
-        following.add(user);
+    public void followUser(String otherUser){
+//        boolean followed = false;
+//
+//        for(String user : following){
+//            if (user == otherUser){
+//                followed = true;
+//            }
+//        }
+//        if (followed)
+//            return;
+//        else
+//            following.add(otherUser);
+        following.add(otherUser);
     }
 
     @Override
     public String toString() {
-        return uID;
+        return this.uID;
     }
+
+    public String getuID(){
+        return this.uID;
+    }
+
 }
