@@ -1,13 +1,6 @@
-package sample;
-
-import javafx.event.ActionEvent;
-
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
 
-public class AdminControlPanel {
-
+public class AdminControlPanel  {
 
     public ArrayList<String> users;
     public ArrayList<String> uniqueGroupIDs;
@@ -28,6 +21,9 @@ public class AdminControlPanel {
 
 
     }
+
+
+
     /*
     A few analysis features are needed in the admin control panel:
     1) output the total number of users; DONE
