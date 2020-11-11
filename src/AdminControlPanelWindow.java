@@ -1,22 +1,46 @@
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
+import javafx.stage.Stage;
 
 
 public class AdminControlPanelWindow extends Application {
 
+    private AdminControlPanel adminControlPanelSingletonInstance = AdminControlPanel.getInstance();
+    private TreeItem<userEntity> treeItemList;
+    private TreeItem<userEntity> clickedUser;
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public AdminControlPanelWindow(){
+        //TEXT AREAS AND TREEVIEW
+        this.userIdTA = new TextArea("User ID");
+        this.groupIDTA = new TextArea("Group ID");
+        String rootName = "Root";
+        this.root = new TreeItem<userEntity>(new UserGroup(rootName));
+        this.root.setExpanded(true);
+        this.treeView = new TreeView(root);
+        treeView.setShowRoot(true);
+
+        this.clickedUser = null;
+        this.treeItemList = this.root;
+
+        //BUTTONS
+        this.addUserBttn = new Button("Add User");
+        this.addGroupBttn = new Button("Add Group");
+        this.openUserViewBttn = new Button("Open User View");
+        this.showGroupTotalBttn = new Button("Show Group Total");
+        this.showUserTotalBttn = new Button("Show User Total");
+        this.showMessagesTotalBttn = new Button("Show Messages Total");
+        this.showPositivePercentageBttn = new Button("Show Positive Percentage");
+
     }
 
     @Override
@@ -29,24 +53,51 @@ public class AdminControlPanelWindow extends Application {
 //        //WORKING
 //        //  Parent root = FXMLLoader.load(getClass().getResource("../adminControlPanel.fxml"));
 
-
         primaryStage.setTitle("Admin Control Panel");
 
-        //TEXT AREAS AND TREEVIEW
-        userIdTA = new TextArea("User ID");
-        groupIDTA = new TextArea("Group ID");
-        treeView = new TreeView();
+        //add user to treeview
+        addUserBttn.setOnAction(e->{
+            System.out.println("Pressing Add User Button");
+            String newUser = this.userIdTA.getText();
+            boolean success = this.adminControlPanelSingletonInstance.addUser(newUser);
+            if (success) {
+                System.out.println("Successfully Added: " + newUser);
+                this.userIdTA.setText("");
+                this.addUserToTreeView(newUser);
+            }
+            else {
+                System.out.println("ERROR");
+            }
+        });
 
+        //adds group to tree view
+        addGroupBttn.setOnAction(e -> {
+            String newGroup = this.groupIDTA.getText();
+            boolean success = this.adminControlPanelSingletonInstance.addUserGroup(newGroup);
+            if (success){
+                System.out.println("Successfully added group: " + newGroup);
+                this.groupIDTA.setText("");
+                this.addUserGroupToTreeView(newGroup);
+            }
+            else {
+                System.out.println("ERROR ON ADDING GROUP");
+            }
 
-        //BUTTONS
-        addUserBttn = new Button("Add User");
-        addGroupBttn = new Button("Add Group");
-        openUserViewBttn = new Button("Open User View");
-        showGroupTotalBttn = new Button("Show Group Total");
-        showUserTotalBttn = new Button("Show User Total");
-        showMessagesTotalBttn = new Button("Show Messages Total");
-        showPositivePercentageBttn = new Button("Show Positive Percentage");
+        });
 
+        this.treeView.getSelectionModel().selectedItemProperty().addListener((v,oldValue, newValue) ->{
+            if (newValue != null){
+                if(newValue.getValue() instanceof  UserGroup)
+                    this.treeItemList = newValue;
+                else{
+                    this.clickedUser = newValue;
+                }
+            }
+        });
+        openUserViewBttn.setOnAction(e-> {
+            if(this.clickedUser != null)
+                new UserViewWindow((User)this.clickedUser.getValue()).start();
+        });
 
 
 
@@ -63,6 +114,7 @@ public class AdminControlPanelWindow extends Application {
                 showUserTotalBttn,showMessagesTotalBttn,showPositivePercentageBttn, userIdTA,groupIDTA,treeView);
         setLayOuts();
 
+
         Scene scene = new Scene(layout, 400, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -78,7 +130,8 @@ public class AdminControlPanelWindow extends Application {
     private Button showPositivePercentageBttn;
     private TextArea userIdTA;
     private TextArea groupIDTA;
-    private TreeView treeView;
+    private TreeView<userEntity> treeView;
+    private TreeItem<userEntity> root;
 
     private void setLayOuts(){
 
@@ -134,4 +187,17 @@ public class AdminControlPanelWindow extends Application {
         showGroupTotalBttn.setPrefWidth(176);
         showGroupTotalBttn.setPrefHeight(61);
     }
+
+    private void addUserToTreeView(String uID){
+        TreeItem<userEntity> newUser = new TreeItem<userEntity>(new User(uID));
+        newUser.setExpanded(true);
+        this.treeItemList.getChildren().add(newUser);
+    }
+
+    private void addUserGroupToTreeView(String userGroupID){
+        TreeItem<userEntity> newUserGroup = new TreeItem<>(new UserGroup(userGroupID));
+        newUserGroup.setExpanded(true);
+        this.treeItemList.getChildren().add(newUserGroup);
+    }
+
 }

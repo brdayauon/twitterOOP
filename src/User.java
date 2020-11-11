@@ -1,16 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements userEntity{
     private final String uID;
-    private final List<String> following;
-    private final List<String> newsFeedList;
-    private final List<User> followers;
+    private final ArrayList<User> following;
+    private final ArrayList<String> newsFeedList;
+    private final ArrayList<User> followers;
 
-    private int totalNumberOfUsers = 0;
-    private int totalNumberOfGroups = 0;
-    private int totalNumberOfTweets = 0;
-    private int totalNumberOfPositiveCount = 0;
     private String[] positiveWords = { "good", "great", "excellent", };
 
     /*
@@ -25,7 +21,6 @@ public class User {
         followers = new ArrayList<>();
         following = new ArrayList<>();
         newsFeedList = new ArrayList<>();
-        totalNumberOfUsers += 1;
     }
 
     /*Users can choose to follow other users (not user groups) by providing the target user ID.
@@ -35,39 +30,21 @@ public class User {
     */
 
 
-    /*
-    A few analysis features are needed in the admin control panel:
-    1) output the total number of users; DONE
-    2) output the total number of groups; DONE
-    3) output the total number of Tweet messages in all the users’ news feed; DONE
-    4) output the percentage of the positive Tweet messages in all the users’ news feed
-    (the message containing positive words, such as good, great, excellent, etc.)
-    Free free to decide the positive words.
-     */
-    public int getTotalNumberOfUsers(){
-        return totalNumberOfUsers;
+    public void followUser(User otherUser){
+        if (!this.following.contains(otherUser) && validUser(otherUser))
+            following.add(otherUser);
     }
-    public int getTotalNumberOfGroups(){
-        return totalNumberOfGroups;
-    }
-    public int getTotalNumberOfTweets(){
-        return totalNumberOfTweets;
-    }
-    public int getTotalNumberOfPositiveCount() {return totalNumberOfPositiveCount;}
 
-    public void followUser(String otherUser){
-//        boolean followed = false;
-//
-//        for(String user : following){
-//            if (user == otherUser){
-//                followed = true;
-//            }
-//        }
-//        if (followed)
-//            return;
-//        else
-//            following.add(otherUser);
-        following.add(otherUser);
+    private boolean validUser(User otherUser) {
+        for (User user : AdminControlPanel.getInstance().getUsers()){
+            if (user.equals(otherUser))
+                return true;
+        }
+        return  false;
+    }
+
+    public ArrayList<User> getFollows(){
+        return following;
     }
 
     @Override
@@ -75,8 +52,12 @@ public class User {
         return this.uID;
     }
 
-    public String getuID(){
+//    public String getuID(){
+//        return this.uID;
+//    }
+
+    @Override
+    public String getUID() {
         return this.uID;
     }
-
 }

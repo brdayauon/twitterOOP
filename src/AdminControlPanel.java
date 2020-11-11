@@ -1,12 +1,18 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class AdminControlPanel  {
 
-    public ArrayList<String> users;
-    public ArrayList<String> uniqueGroupIDs;
+    private ArrayList<User> users;
+    private ArrayList<UserGroup> uniqueGroupIDs;
 
     //Singleton Pattern
     private static AdminControlPanel instance;
+
+    private AdminControlPanel(){
+        this.users = new ArrayList<>();
+        this.uniqueGroupIDs = new ArrayList<>();
+    }
 
     public static AdminControlPanel getInstance(){
         if (instance == null)
@@ -14,14 +20,6 @@ public class AdminControlPanel  {
 
         return instance;
     }
-
-    private AdminControlPanel(){
-        this.users = new ArrayList<>();
-        this.uniqueGroupIDs = new ArrayList<>();
-
-
-    }
-
 
 
     /*
@@ -35,11 +33,57 @@ public class AdminControlPanel  {
      */
 
 
+    //    1) output the total number of users; DONE
+    public int getNumberOfUsers(){
+        return users.toArray().length;
+    }
 
+    //2) output the total number of groups; DONE
+    public int getNumberOfGroups(){
+        return uniqueGroupIDs.toArray().length;
+    }
 
-    public void addUser(String user){
+    //FOR TREEVIEW
+    public ArrayList<User> getUsers(){
+        ArrayList<User> listOfUsers = new ArrayList<>();
+        listOfUsers.addAll(this.users);
+
+        return listOfUsers;
+    }
+
+    public boolean addUser(String uId){
+        for(User user : users){
+            if (user.getUID().equals(uId)){
+                return false;
+            }
+        }
+        this.users.add(new User(uId));
+        System.out.println("WORKING");
+        return true;
+    }
+
+    public boolean addUserGroup(String userGroupId){
+        for(UserGroup userGroup : uniqueGroupIDs){
+            if (userGroup.getUID().equals(userGroupId))
+                return false;
+        }
+        this.uniqueGroupIDs.add(new UserGroup(userGroupId));
+        System.out.println("WORKING");
+        return true;
 
     }
+
+    public User getUser(String uID){
+
+        for (User user : this.users) {
+            if (user.toString().equals(uID)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+
 
 
 
