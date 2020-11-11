@@ -24,7 +24,7 @@ public class popUpDialogDisplayWindow {
         this.setLayout();
         this.layout.getChildren().add(label);
         this.label.setText(message);
-        this.stage.show();
+        this.stage.showAndWait();
     }
     private Label label;
     public void setLayout(){

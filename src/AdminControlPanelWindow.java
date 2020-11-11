@@ -17,6 +17,10 @@ public class AdminControlPanelWindow extends Application {
     private int totalUsers;
     private int totalUserGroups;
 
+    //need to fix
+    private int totalMessages;
+    private double positivePercentage;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -32,6 +36,8 @@ public class AdminControlPanelWindow extends Application {
         treeView.setShowRoot(true);
         this.totalUserGroups = 0;
         this.totalUsers = 0;
+        this.totalMessages = 0;
+        this.positivePercentage = 0;
         this.clickedUser = null;
         this.treeItemList = this.root;
 
@@ -109,7 +115,21 @@ public class AdminControlPanelWindow extends Application {
             new popUpDialogDisplayWindow(message, "User Total").showDialogWindow();
         });
 
+        showGroupTotalBttn.setOnAction(e->{
+            String message = ("Total Group Amount: " + this.totalUserGroups);
+            new popUpDialogDisplayWindow(message, "Total User Groups").showDialogWindow();
+        });
 
+        //need to fix these 2 buttons
+        showPositivePercentageBttn.setOnAction(e -> {
+            String message = ("Positive Percentage: " + this.positivePercentage + "%");
+             new popUpDialogDisplayWindow(message, "Positive Percentage").showDialogWindow();
+        });
+
+        showMessagesTotalBttn.setOnAction(e-> {
+            String message = ("Message total: " + this.totalMessages);
+            new popUpDialogDisplayWindow(message, "Total Messages").showDialogWindow();
+        });
         //BUTTON ACTIONS
 //        button.setOnAction(e -> {
 //            System.out.println("hello world");
