@@ -85,12 +85,12 @@ public class AdminControlPanelWindow extends Application {
 
         });
 
-        this.treeView.getSelectionModel().selectedItemProperty().addListener((v,oldValue, newValue) ->{
-            if (newValue != null){
-                if(newValue.getValue() instanceof  UserGroup)
-                    this.treeItemList = newValue;
+        this.treeView.getSelectionModel().selectedItemProperty().addListener((obs,oldSelection, newSelection) ->{
+            if (newSelection != null){
+                if(newSelection.getValue() instanceof  UserGroup)
+                    this.treeItemList = newSelection;
                 else{
-                    this.clickedUser = newValue;
+                    this.clickedUser = newSelection;
                 }
             }
         });
