@@ -14,6 +14,8 @@ public class AdminControlPanelWindow extends Application {
     private AdminControlPanel adminControlPanelSingletonInstance = AdminControlPanel.getInstance();
     private TreeItem<userEntity> treeItemList;
     private TreeItem<userEntity> clickedUser;
+    private int totalUsers;
+    private int totalUserGroups;
 
     public static void main(String[] args) {
         launch(args);
@@ -28,7 +30,8 @@ public class AdminControlPanelWindow extends Application {
         this.root.setExpanded(true);
         this.treeView = new TreeView(root);
         treeView.setShowRoot(true);
-
+        this.totalUserGroups = 0;
+        this.totalUsers = 0;
         this.clickedUser = null;
         this.treeItemList = this.root;
 
@@ -64,6 +67,7 @@ public class AdminControlPanelWindow extends Application {
                 System.out.println("Successfully Added: " + newUser);
                 this.userIdTA.setText("");
                 this.addUserToTreeView(newUser);
+                this.totalUsers += 1;
             }
             else {
                 System.out.println("ERROR");
@@ -78,6 +82,7 @@ public class AdminControlPanelWindow extends Application {
                 System.out.println("Successfully added group: " + newGroup);
                 this.groupIDTA.setText("");
                 this.addUserGroupToTreeView(newGroup);
+                this.totalUserGroups += 1;
             }
             else {
                 System.out.println("ERROR ON ADDING GROUP");
@@ -99,6 +104,10 @@ public class AdminControlPanelWindow extends Application {
                 new UserViewWindow((User)this.clickedUser.getValue()).start();
         });
 
+        showUserTotalBttn.setOnAction(e-> {
+            String message = ("Total user amount: " + this.totalUsers);
+            new popUpDialogDisplayWindow(message, "User Total").showDialogWindow();
+        });
 
 
         //BUTTON ACTIONS
