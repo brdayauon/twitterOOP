@@ -83,7 +83,12 @@ public class AdminControlPanel  {
         return null;
     }
 
+    public UserViewWindow getUserViewWindow(String uID){
+        if (uID != null)
+            return this.getUserViewWindow(uID);
 
+        return null;
+    }
 
 
 

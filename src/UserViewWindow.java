@@ -32,6 +32,9 @@ public class UserViewWindow {
 
     }
 
+    public void addTweetToNewsFeed(String tweetToAdd) {
+    }
+
     public void start(){
         this.setLayout();
         this.layout.getChildren().addAll(userIdTA,tweetMessageTA,currentFollowing,newsFeed,followUserBttn,postTweetBttn);

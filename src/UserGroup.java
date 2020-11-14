@@ -1,12 +1,16 @@
+import javafx.scene.control.TreeItem;
+
 import java.util.ArrayList;
 
-public class UserGroup implements userEntity{
+public class UserGroup implements userEntity {
 
     private String userGroupID;
     private int totalGroups = 0;
     private ArrayList<User> users;
+    private static TreeItem<userEntity> root;
 
     public UserGroup(){
+        //root = new TreeItem<userEntity>("Root");
         this.totalGroups += 1;
     }
 
@@ -22,6 +26,11 @@ public class UserGroup implements userEntity{
              return true;
          }
          return false;
+    }
+
+
+    public int getTotalGroups(){
+        return totalGroups;
     }
 
     public String getUserGroupID(){

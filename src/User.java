@@ -1,13 +1,22 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class User implements userEntity{
+public class User implements userEntity,  Observer {
+
+    private AdminControlPanel adminControlPanel;
+
     private final String uID;
     private final ArrayList<User> following;
     private final ArrayList<String> newsFeedList;
     private final ArrayList<User> followers;
+    private final ArrayList<String> messages;
+    private int positiveWordCount = 0;
+    private int messageCount = 0;
+    private int totalUsers = 0;
 
-    private String[] positiveWords = { "good", "great", "excellent", };
+    private String[] positiveWords = { "good", "great", "excellent", "awesome" };
 
     /*
         A user has 1) an unique ID; 
@@ -20,7 +29,9 @@ public class User implements userEntity{
         this.uID = uID;
         followers = new ArrayList<>();
         following = new ArrayList<>();
+        messages = new ArrayList<>();
         newsFeedList = new ArrayList<>();
+        this.totalUsers += 1;
     }
 
     /*Users can choose to follow other users (not user groups) by providing the target user ID.
@@ -28,6 +39,21 @@ public class User implements userEntity{
     so that all the followers can see this message in their news feed lists.
     Of course, the user can also see his or her own posted messages.
     */
+
+
+    public void tweet (String message){
+        messages.add(message);
+
+        newsFeedList.add(0, "- " + uID + ": " + message);
+
+        for (String words : positiveWords){
+            if (message.toLowerCase().contains(words)){
+                positiveWordCount += 1;
+            }
+        }
+        messageCount += 1;
+
+    }
 
 
     public void followUser(User otherUser){
@@ -43,6 +69,14 @@ public class User implements userEntity{
         return  false;
     }
 
+    public ArrayList<String> getMessages() {
+        return this.messages;
+    }
+
+    public int getTotalUsers(){
+        return this.totalUsers;
+    }
+
     public ArrayList<User> getFollows(){
         return following;
     }
@@ -52,12 +86,21 @@ public class User implements userEntity{
         return this.uID;
     }
 
-//    public String getuID(){
-//        return this.uID;
-//    }
+    public ArrayList<String> getNewsFeedList(){
+        return  newsFeedList;
+    }
 
     @Override
     public String getUID() {
         return this.uID;
+    }
+
+    @Override
+    public void update(String newTweet) {
+        this.newsFeedList.add(newTweet);
+        UserViewWindow userViewWindow = this.adminControlPanel.getUserViewWindow(this.uID);
+
+        if (userViewWindow != null)
+            userViewWindow.add
     }
 }
