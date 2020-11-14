@@ -1,9 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
-public class User implements userEntity,  Observer {
+public class User implements userEntity, Observer {
 
     private AdminControlPanel adminControlPanel;
 
@@ -15,7 +14,8 @@ public class User implements userEntity,  Observer {
     private int positiveWordCount = 0;
     private int messageCount = 0;
     private int totalUsers = 0;
-
+    private final ArrayList<Observer> observers;
+    public String tweets;
     private String[] positiveWords = { "good", "great", "excellent", "awesome" };
 
     /*
@@ -32,6 +32,8 @@ public class User implements userEntity,  Observer {
         messages = new ArrayList<>();
         newsFeedList = new ArrayList<>();
         this.totalUsers += 1;
+        this.observers = new ArrayList<>();
+        this.tweets = "";
     }
 
     /*Users can choose to follow other users (not user groups) by providing the target user ID.
@@ -101,6 +103,21 @@ public class User implements userEntity,  Observer {
         UserViewWindow userViewWindow = this.adminControlPanel.getUserViewWindow(this.uID);
 
         if (userViewWindow != null)
-            userViewWindow.add
+            userViewWindow.addTweetToNewsFeed(newTweet);
+
     }
+
+    public void addObserver(Observer newObserver){
+        this.observers.add(newObserver);
+    }
+
+    @Override
+    public void notifyObserver() {
+        for (Observer observer : observers) {
+            observer.update(this.tweets);
+        }
+    }
+
+
+
 }

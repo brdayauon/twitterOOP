@@ -217,12 +217,15 @@ public class AdminControlPanelWindow extends Application {
         showGroupTotalBttn.setPrefHeight(61);
     }
 
+    //Add users to the tree view
+
     private void addUserToTreeView(String uID){
         TreeItem<userEntity> newUser = new TreeItem<userEntity>(new User(uID));
         newUser.setExpanded(true);
         this.treeItemList.getChildren().add(newUser);
     }
 
+    //Add user group to the tree View.
     private void addUserGroupToTreeView(String userGroupID){
         TreeItem<userEntity> newUserGroup = new TreeItem<>(new UserGroup(userGroupID));
         newUserGroup.setExpanded(true);

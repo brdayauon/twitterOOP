@@ -33,6 +33,7 @@ public class UserViewWindow {
     }
 
     public void addTweetToNewsFeed(String tweetToAdd) {
+        this.newsFeed.getItems().add(tweetToAdd);
     }
 
     public void start(){
