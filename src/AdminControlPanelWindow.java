@@ -8,6 +8,8 @@ import javafx.scene.layout.AnchorPane;
 
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 
 public class AdminControlPanelWindow extends Application {
 
@@ -16,7 +18,9 @@ public class AdminControlPanelWindow extends Application {
     private TreeItem<userEntity> clickedUser;
     private int totalUsers;
     private int totalUserGroups;
+    private ArrayList<User> users;
 
+    private ButtonVisitor visitor;
     //need to fix
     private int totalMessages;
     private double positivePercentage;
@@ -40,7 +44,7 @@ public class AdminControlPanelWindow extends Application {
         this.positivePercentage = 0;
         this.clickedUser = null;
         this.treeItemList = this.root;
-
+        this.users = new ArrayList<>();
         //BUTTONS
         this.addUserBttn = new Button("Add User");
         this.addGroupBttn = new Button("Add Group");
@@ -67,13 +71,15 @@ public class AdminControlPanelWindow extends Application {
         //add user to treeview
         addUserBttn.setOnAction(e->{
             System.out.println("Pressing Add User Button");
-            String newUser = this.userIdTA.getText();
-            boolean success = this.adminControlPanelSingletonInstance.addUser(newUser);
+            //String newUser = this.userIdTA.getText();
+            User newUser = new User(this.userIdTA.getText());
+            boolean success = this.adminControlPanelSingletonInstance.addUser(newUser.toString());
             if (success) {
                 System.out.println("Successfully Added: " + newUser);
                 this.userIdTA.setText("");
-                this.addUserToTreeView(newUser);
+                this.addUserToTreeView(newUser.toString());
                 this.totalUsers += 1;
+                this.users.add(newUser);
             }
             else {
                 System.out.println("ERROR");
@@ -84,6 +90,8 @@ public class AdminControlPanelWindow extends Application {
         addGroupBttn.setOnAction(e -> {
             String newGroup = this.groupIDTA.getText();
             boolean success = this.adminControlPanelSingletonInstance.addUserGroup(newGroup);
+            TreeItem<userEntity> groupNode = new TreeItem<userEntity>(new UserGroup(newGroup));
+            root.nextSibling(groupNode);
             if (success){
                 System.out.println("Successfully added group: " + newGroup);
                 this.groupIDTA.setText("");
@@ -127,7 +135,9 @@ public class AdminControlPanelWindow extends Application {
         });
 
         showMessagesTotalBttn.setOnAction(e-> {
-            String message = ("Message total: " + this.totalMessages);
+
+            String message = ("Message total: " + getTotalMessageCount() + this.totalMessages);
+            System.out.println(getTotalMessageCount());
             new popUpDialogDisplayWindow(message, "Total Messages").showDialogWindow();
         });
         //BUTTON ACTIONS
@@ -231,5 +241,14 @@ public class AdminControlPanelWindow extends Application {
         newUserGroup.setExpanded(true);
         this.treeItemList.getChildren().add(newUserGroup);
     }
+
+    public int getTotalMessageCount() {
+        int totalMessageCount = 0;
+        for (User user : users){
+            totalMessageCount += user.getMessageCount();
+        }
+        return totalMessageCount;
+    }
+
 
 }

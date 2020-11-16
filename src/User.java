@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
 
 public class User implements userEntity, Observer {
 
@@ -42,6 +40,21 @@ public class User implements userEntity, Observer {
     Of course, the user can also see his or her own posted messages.
     */
 
+    public boolean addOtherToFollower(User otherUser) {
+        if (!this.followers.contains(otherUser) && validUser(otherUser) && !(otherUser.getUID().equals(this.getUID()))){
+            this.followers.add(otherUser);
+            return true;
+    }
+        return false;
+    }
+
+    public boolean follow(User otherUser){
+        if (!this.following.contains(otherUser) && validUser(otherUser) && !(otherUser.getUID().equals(this.getUID()))) {
+            following.add(otherUser);
+            return true;
+        }
+        return false;
+    }
 
     public void tweet (String message){
         messages.add(message);
@@ -55,13 +68,11 @@ public class User implements userEntity, Observer {
         }
         messageCount += 1;
 
+       // return message;
     }
 
 
-    public void followUser(User otherUser){
-        if (!this.following.contains(otherUser) && validUser(otherUser))
-            following.add(otherUser);
-    }
+
 
     private boolean validUser(User otherUser) {
         for (User user : AdminControlPanel.getInstance().getUsers()){
@@ -88,6 +99,10 @@ public class User implements userEntity, Observer {
         return this.uID;
     }
 
+    public int getMessageCount() {
+        return messageCount;
+    }
+
     public ArrayList<String> getNewsFeedList(){
         return  newsFeedList;
     }
@@ -103,9 +118,11 @@ public class User implements userEntity, Observer {
         UserViewWindow userViewWindow = this.adminControlPanel.getUserViewWindow(this.uID);
 
         if (userViewWindow != null)
-            userViewWindow.addTweetToNewsFeed(newTweet);
+            //userViewWindow.addTweetToNewsFeed(newTweet);
+            userViewWindow.addNews(newTweet);
 
     }
+
 
     public void addObserver(Observer newObserver){
         this.observers.add(newObserver);
@@ -118,6 +135,19 @@ public class User implements userEntity, Observer {
         }
     }
 
+    public void addNewTweet(String tweet){
+        this.tweets = tweet;
+        this.messageCount += 1;
+        this.notifyObserver();
+    }
+
+    public void updateNewsFeed(String newTweet){
+        this.newsFeedList.add(newTweet);
+    }
+
+    public ArrayList<User> getObserver(){
+        return followers;
+    }
 
 
 }

@@ -9,9 +9,13 @@ public class AdminControlPanel  {
     //Singleton Pattern
     private static AdminControlPanel instance;
 
+    //to return total tweets
+    private ArrayList<String> tweets;
+
     private AdminControlPanel(){
         this.users = new ArrayList<>();
         this.uniqueGroupIDs = new ArrayList<>();
+        this.tweets = new ArrayList<>();
     }
 
     public static AdminControlPanel getInstance(){
@@ -90,6 +94,13 @@ public class AdminControlPanel  {
         return null;
     }
 
+    public void addTweet(String tweet){
+        this.tweets.add(tweet);
+    }
+
+    public ArrayList<String> getTweets() {
+        return this.tweets;
+    }
 
 
 //    public void pressAddGroupButton(ActionEvent event) {
