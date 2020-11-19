@@ -24,6 +24,8 @@ public class AdminControlPanelWindow extends Application {
     //need to fix
     private int totalMessages;
     private double positivePercentage;
+    private String[] positiveWords = { "good", "great", "excellent", "awesome" };
+
 
     public static void main(String[] args) {
         launch(args);
@@ -130,14 +132,14 @@ public class AdminControlPanelWindow extends Application {
 
         //need to fix these 2 buttons
         showPositivePercentageBttn.setOnAction(e -> {
+            countPositiveWordsInTweets();
             String message = ("Positive Percentage: " + this.positivePercentage + "%");
              new popUpDialogDisplayWindow(message, "Positive Percentage").showDialogWindow();
         });
 
         showMessagesTotalBttn.setOnAction(e-> {
-
-            String message = ("Message total: " + getTotalMessageCount() + this.totalMessages);
-            System.out.println(getTotalMessageCount());
+            getTotalMessageCount();
+            String message = ("Message total: " + this.totalMessages);
             new popUpDialogDisplayWindow(message, "Total Messages").showDialogWindow();
         });
         //BUTTON ACTIONS
@@ -242,12 +244,33 @@ public class AdminControlPanelWindow extends Application {
         this.treeItemList.getChildren().add(newUserGroup);
     }
 
-    public int getTotalMessageCount() {
-        int totalMessageCount = 0;
-        for (User user : users){
-            totalMessageCount += user.getMessageCount();
+    public void getTotalMessageCount() {
+//        int totalMessageCount = 0;
+//        for (User user : users){
+//            totalMessageCount += user.getMessageCount();
+//        }
+        ArrayList<String> listOfTweets = adminControlPanelSingletonInstance.getTweets();
+
+        this.totalMessages = listOfTweets.size();
+    }
+
+    public void countPositiveWordsInTweets(){
+        //need to get tweets in admin control pane;
+        ArrayList<String> listOfTweets = adminControlPanelSingletonInstance.getTweets();
+        double positivePercentage = 0;
+        double positiveWordCount = 0;
+
+        for (String words : positiveWords){
+            for(String messages : listOfTweets){
+                if (words.equals(messages)){
+                    positiveWordCount += 1;
+                }
+            }
         }
-        return totalMessageCount;
+
+        positivePercentage =  positiveWordCount/ (double)(listOfTweets.size());
+
+        this.positivePercentage = positivePercentage;
     }
 
 

@@ -68,7 +68,6 @@ public class User implements userEntity, Observer {
         }
         messageCount += 1;
 
-       // return message;
     }
 
 
@@ -130,9 +129,8 @@ public class User implements userEntity, Observer {
 
     @Override
     public void notifyObserver() {
-        for (Observer observer : observers) {
-            observer.update(this.tweets);
-        }
+        for(int i = 0; i < observers.size(); i ++)
+            observers.get(i).update(this.tweets);
     }
 
     public void addNewTweet(String tweet){

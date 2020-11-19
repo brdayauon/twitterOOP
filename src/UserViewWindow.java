@@ -60,7 +60,8 @@ public class UserViewWindow {
                 }
                 else{
                     System.out.println("already following");
-
+                    String message = "ALREADY FOLLOWING OR CAN'T FOLLOW SELF";
+                    new popUpDialogDisplayWindow(message, "NOT A VALID USER").showDialogWindow();
                 }
             }
             else{
@@ -81,7 +82,8 @@ public class UserViewWindow {
                 //user.tweet(tweetMessageTA.getText());
                 //String messageToTweet = this.user.tweet(this.tweetMessageTA.getText());
                 String messageToTweet = this.tweetMessageTA.getText();
-                this.user.addNewTweet(this.user.getUID() + " : " + messageToTweet);
+                //this.user.addNewTweet(this.user.getUID() + " : " + messageToTweet);
+                this.user.tweet(messageToTweet);
                 this.newsFeed.getItems().add(this.user.getUID() + " : " + messageToTweet);
 
                 this.adminSingleton.addTweet(messageToTweet);
