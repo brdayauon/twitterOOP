@@ -3,19 +3,20 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class UserViewWindow {
-    private User user;
-    private Stage stage;
-    private Scene scene;
-    private AnchorPane layout;
+import java.util.ArrayList;
 
-    //reference to singleton
-    private AdminControlPanel adminSingleton;
+public class UserViewWindow {
+    private final User user;
+    private final Stage stage;
+    private final AnchorPane layout;
+
+    private final AdminControlPanel adminControlPanelSingletonInstance;
 
     public UserViewWindow(User user){
         this.userIdTA = new TextArea();
+        this.userIdTA.setPromptText("Enter User ID");
         this.tweetMessageTA = new TextArea();
-
+        this.tweetMessageTA.setPromptText("Type to tweet");
         this.newsFeed = new ListView<>();
         this.currentFollowing = new ListView<>();
 
@@ -28,11 +29,11 @@ public class UserViewWindow {
         this.stage = new Stage();
         this.layout = new AnchorPane();
 
-        this.scene = new Scene(layout, 400, 400);
+        Scene scene = new Scene(layout, 400, 400);
         this.stage.setScene(scene);
         this.stage.setTitle(user.getUID() + " View");
 
-        this.adminSingleton = AdminControlPanel.getInstance();
+        this.adminControlPanelSingletonInstance = AdminControlPanel.getInstance();
 
     }
 
@@ -41,12 +42,10 @@ public class UserViewWindow {
     }
 
     public void start(){
-        this.setLayout();
-        this.layout.getChildren().addAll(userIdTA,tweetMessageTA,currentFollowing,newsFeed,followUserBttn,postTweetBttn);
-
-
+        showTweets(this.user);
         this.followUserBttn.setOnAction(e-> {
-            User followUser = adminSingleton.getUser(this.userIdTA.getText());
+            String inputUserToFollow = this.userIdTA.getText();
+            User followUser = adminControlPanelSingletonInstance.getUser(inputUserToFollow);
 
             if (followUser != null){
                 boolean followed = this.user.follow(followUser);
@@ -56,7 +55,7 @@ public class UserViewWindow {
 
                     followUser.addOtherToFollower(this.user); //this current user is following that other user
 
-                    followUser.addObserver(this.user);
+                    followUser.register(this.user);
                 }
                 else{
                     System.out.println("already following");
@@ -76,46 +75,73 @@ public class UserViewWindow {
 
         //post tweets
         this.postTweetBttn.setOnAction(e -> {
+            showTweets(this.user);
+            showNewsFeed(this.user);
             if (tweetMessageTA.getText().equals("")){
                 System.out.println("null, TWEET CAN'T BE BLANK");
             }else{
                 //user.tweet(tweetMessageTA.getText());
                 //String messageToTweet = this.user.tweet(this.tweetMessageTA.getText());
                 String messageToTweet = this.tweetMessageTA.getText();
-                //this.user.addNewTweet(this.user.getUID() + " : " + messageToTweet);
-                this.user.tweet(messageToTweet);
+                this.user.addTweet(this.user.getUID() + ": " + messageToTweet);
+                this.adminControlPanelSingletonInstance.addTweet(messageToTweet);
+
+                //this.user.tweet(messageToTweet);
+                //this is what gets posted after every tweet
                 this.newsFeed.getItems().add(this.user.getUID() + " : " + messageToTweet);
-
-                this.adminSingleton.addTweet(messageToTweet);
-
-
+                this.newsFeed.getItems().addAll();
                 this.tweetMessageTA.setText("");
-
 
             }
 
         });
 
+        this.setLayout();
+        this.layout.getChildren().addAll(userIdTA,tweetMessageTA,currentFollowing,newsFeed,followUserBttn,postTweetBttn);
 
         this.stage.show();
     }
 
-    public void addNews(String newsToAdd){
-        this.newsFeed.getItems().add(newsToAdd);
+    //iterate over the current user's following and get their tweets
+    public void showTweets(User currentUser){
+        ArrayList<User> usersFollowing = currentUser.getFollowing();
+        for(User user : usersFollowing){
+            //for posts in user's post history
+            ArrayList<String> messages = user.getMessages();
+            for(String posts : messages) {
+                this.newsFeed.getItems().add(user.getUID() + " : " + posts);
+                System.out.println("POSTS: "+ posts);
+            }
+        }
+    }
+
+    public void showNewsFeed(User currentUser){
+        ArrayList<String> temp = currentUser.getNewsFeed();
+        boolean test = true;
+        for (String feed: temp){
+            this.newsFeed.getItems().add(user.getUID() + " : " + feed);
+            test = false;
+        }
+        if (test)
+            System.out.println("THIS IS NOT WORKING");
+    }
+
+    public void addTweet(String addTweetToFeed){
+        this.newsFeed.getItems().add(addTweetToFeed);
     }
 
 
     //two text areas
-    private TextArea userIdTA;
-    private TextArea tweetMessageTA;
+    private final TextArea userIdTA;
+    private final TextArea tweetMessageTA;
 
     //two list views
-    private ListView currentFollowing;
-    private ListView<String> newsFeed;
+    private final ListView currentFollowing;
+    private final ListView<String> newsFeed;
 
     //two buttons
-    private Button followUserBttn;
-    private Button postTweetBttn;
+    private final Button followUserBttn;
+    private final Button postTweetBttn;
 
     public void setLayout(){
         //two text areas

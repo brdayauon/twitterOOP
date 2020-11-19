@@ -9,22 +9,25 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class AdminControlPanelWindow extends Application {
 
-    private AdminControlPanel adminControlPanelSingletonInstance = AdminControlPanel.getInstance();
     private TreeItem<userEntity> treeItemList;
     private TreeItem<userEntity> clickedUser;
     private int totalUsers;
     private int totalUserGroups;
-    private ArrayList<User> users;
-
+    private final ArrayList<User> users;
+    private final ArrayList<String> userGroups;
+    private final HashMap<String, UserViewWindow> userViewWindows = new HashMap<String, UserViewWindow>();
+    private final AdminControlPanel adminControlPanelSingletonInstance = AdminControlPanel.getInstance();
+   // private UserGroup userGroup;
     private ButtonVisitor visitor;
     //need to fix
     private int totalMessages;
     private double positivePercentage;
-    private String[] positiveWords = { "good", "great", "excellent", "awesome" };
+    private final String[] positiveWords = { "good", "great", "excellent", "awesome", "best", "cool", "nice", "clear" };
 
 
     public static void main(String[] args) {
@@ -32,9 +35,12 @@ public class AdminControlPanelWindow extends Application {
     }
 
     public AdminControlPanelWindow(){
+        this.userGroups = new ArrayList<String>();
         //TEXT AREAS AND TREEVIEW
-        this.userIdTA = new TextArea("User ID");
-        this.groupIDTA = new TextArea("Group ID");
+        this.userIdTA = new TextArea();
+        this.userIdTA.setPromptText("USER ID");
+        this.groupIDTA = new TextArea();
+        this.groupIDTA.setPromptText("Group ID");
         String rootName = "Root";
         this.root = new TreeItem<userEntity>(new UserGroup(rootName));
         this.root.setExpanded(true);
@@ -76,6 +82,16 @@ public class AdminControlPanelWindow extends Application {
             //String newUser = this.userIdTA.getText();
             User newUser = new User(this.userIdTA.getText());
             boolean success = this.adminControlPanelSingletonInstance.addUser(newUser.toString());
+            if (this.clickedUser.getValue() instanceof UserGroup){
+                String clickedON = this.clickedUser.getValue().getUID();
+                for (String group : userGroups){
+                    if (group.equals(clickedON)){
+                        //check if userGroup exists
+                        String message = ("ERROR: USERGROUP ALRDY EXIST" );
+                        new popUpDialogDisplayWindow(message, "ERROR").showDialogWindow();
+                    }
+                }
+            }
             if (success) {
                 System.out.println("Successfully Added: " + newUser);
                 this.userIdTA.setText("");
@@ -96,12 +112,15 @@ public class AdminControlPanelWindow extends Application {
             root.nextSibling(groupNode);
             if (success){
                 System.out.println("Successfully added group: " + newGroup);
+                userGroups.add(newGroup);
                 this.groupIDTA.setText("");
                 this.addUserGroupToTreeView(newGroup);
                 this.totalUserGroups += 1;
             }
             else {
                 System.out.println("ERROR ON ADDING GROUP");
+                String message = ("ERROR: USERGROUP ALRDY EXIST" );
+                new popUpDialogDisplayWindow(message, "ERROR").showDialogWindow();
             }
 
         });
@@ -110,15 +129,30 @@ public class AdminControlPanelWindow extends Application {
             if (newSelection != null){
                 if(newSelection.getValue() instanceof  UserGroup)
                     this.treeItemList = newSelection;
-                else{
+                else if (newSelection.getValue() instanceof User){
                     this.clickedUser = newSelection;
                 }
             }
         });
         openUserViewBttn.setOnAction(e-> {
-            if(this.clickedUser != null)
-                new UserViewWindow((User)this.clickedUser.getValue()).start();
+            if(this.clickedUser != null) {
+                UserViewWindow window = new UserViewWindow((User) this.clickedUser.getValue());
+                //userViewWindows.put(this.clickedUser.getValue().getUID(), window);
+                this.adminControlPanelSingletonInstance.setUserViewWindow(this.clickedUser.getValue().getUID(), window);
+                window.start();
+            }
         });
+
+          /*
+    A few analysis features are needed in the admin control panel:
+    1) output the total number of users; DONE
+    2) output the total number of groups; DONE
+    3) output the total number of Tweet messages in all the users’ news feed; DONE
+    4) output the percentage of the positive Tweet messages in all the users’ news feed
+    (the message containing positive words, such as good, great, excellent, etc.)
+    Free free to decide the positive words.
+     */
+
 
         showUserTotalBttn.setOnAction(e-> {
             String message = ("Total user amount: " + this.totalUsers);
@@ -135,6 +169,10 @@ public class AdminControlPanelWindow extends Application {
             countPositiveWordsInTweets();
             String message = ("Positive Percentage: " + this.positivePercentage + "%");
              new popUpDialogDisplayWindow(message, "Positive Percentage").showDialogWindow();
+
+//            String message = ("Positive Percentage: " + visitor.visitPositivePercentage() + "%");
+//            new popUpDialogDisplayWindow(message, "Positive Percentage").showDialogWindow();
+
         });
 
         showMessagesTotalBttn.setOnAction(e-> {
@@ -162,17 +200,17 @@ public class AdminControlPanelWindow extends Application {
     }
 
     /*BUTTONS/TextArea/TreeView TO PUT  */
-    private Button addUserBttn;
-    private Button addGroupBttn;
-    private Button openUserViewBttn;
-    private Button showGroupTotalBttn;
-    private Button showUserTotalBttn;
-    private Button showMessagesTotalBttn;
-    private Button showPositivePercentageBttn;
-    private TextArea userIdTA;
-    private TextArea groupIDTA;
-    private TreeView<userEntity> treeView;
-    private TreeItem<userEntity> root;
+    private final Button addUserBttn;
+    private final Button addGroupBttn;
+    private final Button openUserViewBttn;
+    private final Button showGroupTotalBttn;
+    private final Button showUserTotalBttn;
+    private final Button showMessagesTotalBttn;
+    private final Button showPositivePercentageBttn;
+    private final TextArea userIdTA;
+    private final TextArea groupIDTA;
+    private final TreeView<userEntity> treeView;
+    private final TreeItem<userEntity> root;
 
     private void setLayOuts(){
 
@@ -257,20 +295,32 @@ public class AdminControlPanelWindow extends Application {
     public void countPositiveWordsInTweets(){
         //need to get tweets in admin control pane;
         ArrayList<String> listOfTweets = adminControlPanelSingletonInstance.getTweets();
-        double positivePercentage = 0;
+        double positivePercentage;
         double positiveWordCount = 0;
 
-        for (String words : positiveWords){
+        //TERRIBLE n^3 solution. MUST OPTIMIZE LATER. was quick brute force
+        for (String positiveWord : positiveWords){
             for(String messages : listOfTweets){
-                if (words.equals(messages)){
-                    positiveWordCount += 1;
+                String message = messages.toLowerCase();
+                String[] word = message.split(" ");
+                for(String i : word) {
+                    if (positiveWord.equals(i)) {
+                        positiveWordCount += 1;
+                    }
                 }
             }
         }
 
-        positivePercentage =  positiveWordCount/ (double)(listOfTweets.size());
+        positivePercentage =  (positiveWordCount/ (double)(listOfTweets.size()))*100;
 
         this.positivePercentage = positivePercentage;
+    }
+
+    public UserViewWindow getUserViewWindow(String uID){
+        if (uID != null)
+            return this.userViewWindows.get(uID);
+
+        return null;
     }
 
 

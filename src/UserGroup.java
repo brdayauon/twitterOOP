@@ -33,10 +33,6 @@ public class UserGroup implements userEntity {
         return totalGroups;
     }
 
-    public String getUserGroupID(){
-        return userGroupID;
-    }
-
     @Override
     public String toString(){
         return userGroupID;
@@ -45,5 +41,9 @@ public class UserGroup implements userEntity {
     @Override
     public String getUID() {
         return this.userGroupID;
+    }
+
+    public String getUGID(User userGroupID){
+        return userGroupID.getUID();
     }
 }

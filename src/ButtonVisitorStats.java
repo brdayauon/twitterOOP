@@ -27,24 +27,28 @@ public class ButtonVisitorStats implements ButtonVisitor{
         this.positivePercentage = 0.0;
     }
     @Override
-    public void visitUserTotal(User user) {
+    public int visitUserTotal(User user) {
         setTotalUsers(user.getTotalUsers());
+        return 0;
     }
 
     @Override
-    public void visitMessagesTotal(User user) {
+    public int visitMessagesTotal(User user) {
         setTotalMessages(user);
+        return 0;
     }
 
 
     @Override
-    public void visitGroupTotal(UserGroup group) {
+    public int visitGroupTotal(UserGroup group) {
         setTotalGroups(group);
+        return 0;
     }
 
     @Override
-    public void visitPositivePercentage(User user) {
+    public double visitPositivePercentage(User user) {
         ArrayList<User> users = new ArrayList<>();
         ArrayList<String> tweets = user.getMessages();
+        return 0;
     }
 }

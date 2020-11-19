@@ -1,21 +1,23 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdminControlPanel  {
 
-    private ArrayList<User> users;
-    private ArrayList<UserGroup> uniqueGroupIDs;
-
+    private final ArrayList<User> users;
+    private final ArrayList<UserGroup> uniqueGroupIDs;
     //Singleton Pattern
     private static AdminControlPanel instance;
-
     //to return total tweets
-    private ArrayList<String> tweets;
+    private final ArrayList<String> tweets;
+
+    private final HashMap<String, UserViewWindow> userViewWindow;
 
     private AdminControlPanel(){
         this.users = new ArrayList<>();
         this.uniqueGroupIDs = new ArrayList<>();
         this.tweets = new ArrayList<>();
+        this.userViewWindow = new HashMap<>();
     }
 
     public static AdminControlPanel getInstance(){
@@ -23,28 +25,6 @@ public class AdminControlPanel  {
             instance = new AdminControlPanel();
 
         return instance;
-    }
-
-
-    /*
-    A few analysis features are needed in the admin control panel:
-    1) output the total number of users; DONE
-    2) output the total number of groups; DONE
-    3) output the total number of Tweet messages in all the users’ news feed; DONE
-    4) output the percentage of the positive Tweet messages in all the users’ news feed
-    (the message containing positive words, such as good, great, excellent, etc.)
-    Free free to decide the positive words.
-     */
-
-
-    //    1) output the total number of users; DONE
-    public int getNumberOfUsers(){
-        return users.toArray().length;
-    }
-
-    //2) output the total number of groups; DONE
-    public int getNumberOfGroups(){
-        return uniqueGroupIDs.toArray().length;
     }
 
     //FOR TREEVIEW
@@ -87,12 +67,12 @@ public class AdminControlPanel  {
         return null;
     }
 
-    public UserViewWindow getUserViewWindow(String uID){
-        if (uID != null)
-            return this.getUserViewWindow(uID);
-
-        return null;
-    }
+//    public UserViewWindow getUserViewWindow(String uID){
+//        if (uID != null)
+//            return this.getUserViewWindow.get(uID);
+//
+//        return null;
+//    }
 
     public void addTweet(String tweet){
         this.tweets.add(tweet);
@@ -102,6 +82,14 @@ public class AdminControlPanel  {
         return this.tweets;
     }
 
+    //O(1)
+    public void setUserViewWindow(String uID, UserViewWindow window){
+        this.userViewWindow.put(uID, window);
+    }
+    //O(1)
+    public UserViewWindow getUserViewWindow(String uID){
+        return this.userViewWindow.get(uID);
+    }
 
 //    public void pressAddGroupButton(ActionEvent event) {
 //            System.out.println("Adding group button");
@@ -121,6 +109,8 @@ public class AdminControlPanel  {
 //    public void pressShowUserTotal(ActionEvent event) {
 //        System.out.println("Pressing show User Total");
 //    }
+
+
 
 
 }

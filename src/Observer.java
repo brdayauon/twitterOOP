@@ -1,10 +1,8 @@
 public interface Observer {
-    public void update(String event);
-    public void addObserver(Observer observer);
-    public void notifyObserver();
+    void update(String tweet);
 }
 
-
+//https://www.youtube.com/watch?v=wiQdrH2YpT4&t=807s 9:55
 //How its suppose to be like
 //        ------------------
 //import java.util.List;

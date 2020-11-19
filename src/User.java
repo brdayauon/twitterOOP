@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
-public class User implements userEntity, Observer {
+public class User implements userEntity, Observer, Subject {
 
     private AdminControlPanel adminControlPanel;
 
     private final String uID;
     private final ArrayList<User> following;
-    private final ArrayList<String> newsFeedList;
+    private final ArrayList<String> newsFeed;
     private final ArrayList<User> followers;
     private final ArrayList<String> messages;
     private int positiveWordCount = 0;
@@ -28,7 +28,7 @@ public class User implements userEntity, Observer {
         followers = new ArrayList<>();
         following = new ArrayList<>();
         messages = new ArrayList<>();
-        newsFeedList = new ArrayList<>();
+        newsFeed = new ArrayList<>();
         this.totalUsers += 1;
         this.observers = new ArrayList<>();
         this.tweets = "";
@@ -56,21 +56,21 @@ public class User implements userEntity, Observer {
         return false;
     }
 
-    public void tweet (String message){
-        messages.add(message);
+    public void tweet (String tweets){
+        this.tweets = tweets;
+        messages.add(tweets);
 
-        newsFeedList.add(0, "- " + uID + ": " + message);
+        newsFeed.add(0, "- " + uID + ": " + tweets);
 
         for (String words : positiveWords){
-            if (message.toLowerCase().contains(words)){
+            if (tweets.toLowerCase().contains(words)){
                 positiveWordCount += 1;
             }
         }
         messageCount += 1;
+        this.notifyObserver();
 
     }
-
-
 
 
     private boolean validUser(User otherUser) {
@@ -89,8 +89,9 @@ public class User implements userEntity, Observer {
         return this.totalUsers;
     }
 
-    public ArrayList<User> getFollows(){
-        return following;
+    public void addTweet(String tweets){
+        this.tweets = tweets;
+        this.notifyObserver();
     }
 
     @Override
@@ -98,13 +99,6 @@ public class User implements userEntity, Observer {
         return this.uID;
     }
 
-    public int getMessageCount() {
-        return messageCount;
-    }
-
-    public ArrayList<String> getNewsFeedList(){
-        return  newsFeedList;
-    }
 
     @Override
     public String getUID() {
@@ -113,39 +107,40 @@ public class User implements userEntity, Observer {
 
     @Override
     public void update(String newTweet) {
-        this.newsFeedList.add(newTweet);
-        UserViewWindow userViewWindow = this.adminControlPanel.getUserViewWindow(this.uID);
+        this.newsFeed.add(newTweet);
 
-        if (userViewWindow != null)
-            //userViewWindow.addTweetToNewsFeed(newTweet);
-            userViewWindow.addNews(newTweet);
+        UserViewWindow userViewWindow = this.adminControlPanel.getUserViewWindow(this.uID);
+        //userViewWindow.addTweetToNewsFeed(newTweet);
+
+        if (userViewWindow != null) {
+            userViewWindow.addTweet(newTweet);
+        }
 
     }
 
-
-    public void addObserver(Observer newObserver){
-        this.observers.add(newObserver);
+    @Override
+    public void register(Observer o) {
+        this.observers.add(o);
     }
 
     @Override
     public void notifyObserver() {
-        for(int i = 0; i < observers.size(); i ++)
-            observers.get(i).update(this.tweets);
+        for (Observer observer : observers)
+            observer.update(this.tweets);
     }
 
-    public void addNewTweet(String tweet){
-        this.tweets = tweet;
-        this.messageCount += 1;
-        this.notifyObserver();
+
+    public ArrayList<User> getFollowed(){
+        return this.followers;
     }
 
-    public void updateNewsFeed(String newTweet){
-        this.newsFeedList.add(newTweet);
+    public ArrayList<User> getFollowing(){
+
+        return this.following;
     }
 
-    public ArrayList<User> getObserver(){
-        return followers;
+    public ArrayList<String> getNewsFeed(){
+        return this.newsFeed;
     }
-
 
 }
