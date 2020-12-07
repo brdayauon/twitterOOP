@@ -6,7 +6,7 @@ public class UserGroup implements userEntity {
 
     private String userGroupID;
     private int totalGroups = 0;
-    private ArrayList<User> users;
+    private ArrayList<userEntity> userEntity;
     private static TreeItem<userEntity> root;
 
     private long creationTime;
@@ -19,7 +19,7 @@ public class UserGroup implements userEntity {
     public UserGroup(String userGroupID){
         this.totalGroups += 1;
         this.userGroupID = userGroupID;
-        users = new ArrayList<>();
+        userEntity = new ArrayList<>();
         this.creationTime = System.currentTimeMillis();
     }
 
@@ -28,8 +28,8 @@ public class UserGroup implements userEntity {
     }
 
     public boolean addUserToUserGroup(User user){
-         if (!users.contains(user)){
-             users.add(user);
+         if (!userEntity.contains(user)){
+             userEntity.add(user);
              return true;
          }
          return false;
