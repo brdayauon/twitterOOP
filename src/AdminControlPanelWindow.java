@@ -61,6 +61,8 @@ public class AdminControlPanelWindow extends Application {
         this.showUserTotalBttn = new Button("Show User Total");
         this.showMessagesTotalBttn = new Button("Show Messages Total");
         this.showPositivePercentageBttn = new Button("Show Positive Percentage");
+        this.validIDBttn = new Button("Valid ID");
+        this.lastUpdatedUserBttn = new Button("Find Last Updated User");
 
     }
 
@@ -190,7 +192,7 @@ public class AdminControlPanelWindow extends Application {
         //primaryStage.show();
         AnchorPane layout = new AnchorPane();
         layout.getChildren().addAll(addGroupBttn, addUserBttn, openUserViewBttn, showGroupTotalBttn,
-                showUserTotalBttn,showMessagesTotalBttn,showPositivePercentageBttn, userIdTA,groupIDTA,treeView);
+                showUserTotalBttn,showMessagesTotalBttn,showPositivePercentageBttn, userIdTA,groupIDTA,treeView, lastUpdatedUserBttn, validIDBttn);
         setLayOuts();
 
 
@@ -211,6 +213,10 @@ public class AdminControlPanelWindow extends Application {
     private final TextArea groupIDTA;
     private final TreeView<userEntity> treeView;
     private final TreeItem<userEntity> root;
+
+    //assignment 3
+    private final Button validIDBttn;
+    private final Button lastUpdatedUserBttn;
 
     private void setLayOuts(){
 
@@ -265,6 +271,17 @@ public class AdminControlPanelWindow extends Application {
         showGroupTotalBttn.setLayoutY(234);
         showGroupTotalBttn.setPrefWidth(176);
         showGroupTotalBttn.setPrefHeight(61);
+
+        validIDBttn.setLayoutX(258);
+        validIDBttn.setLayoutY(187);
+        validIDBttn.setPrefHeight(23);
+        validIDBttn.setPrefWidth(182);
+
+        lastUpdatedUserBttn.setLayoutX(465);
+        lastUpdatedUserBttn.setLayoutY(187);
+        lastUpdatedUserBttn.setPrefWidth(182);
+        lastUpdatedUserBttn.setPrefHeight(23);
+
     }
 
     //Add users to the tree view
