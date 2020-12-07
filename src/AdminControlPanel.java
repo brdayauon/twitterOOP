@@ -47,6 +47,12 @@ public class AdminControlPanel  {
         return listOfUsers;
     }
 
+    public ArrayList<UserGroup> getUserGroups(){
+        ArrayList<UserGroup> listOfUserGroups = new ArrayList<>(uniqueGroupIDs);
+
+        return listOfUserGroups;
+    }
+
     public boolean addUser(String uId){
         for(User user : users){
             if (user.getUID().equals(uId)){
@@ -78,6 +84,7 @@ public class AdminControlPanel  {
         }
         return null;
     }
+
 
 //    public UserViewWindow getUserViewWindow(String uID){
 //        if (uID != null)

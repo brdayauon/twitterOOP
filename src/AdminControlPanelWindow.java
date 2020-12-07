@@ -84,16 +84,16 @@ public class AdminControlPanelWindow extends Application {
             //String newUser = this.userIdTA.getText();
             User newUser = new User(this.userIdTA.getText());
             boolean success = this.adminControlPanelSingletonInstance.addUser(newUser.toString());
-            if (this.clickedUser.getValue() instanceof UserGroup){
-                String clickedON = this.clickedUser.getValue().getUID();
-                for (String group : userGroups){
-                    if (group.equals(clickedON)){
-                        //check if userGroup exists
-                        String message = ("ERROR: USERGROUP ALRDY EXIST" );
-                        new popUpDialogDisplayWindow(message, "ERROR").showDialogWindow();
-                    }
-                }
-            }
+//            if (this.clickedUser.getValue() instanceof UserGroup){
+//                String clickedON = this.clickedUser.getValue().getUID();
+//                for (String group : userGroups){
+//                    if (group.equals(clickedON)){
+//                        //check if userGroup exists
+//                        String message = ("ERROR: USERGROUP ALRDY EXIST" );
+//                        new popUpDialogDisplayWindow(message, "ERROR").showDialogWindow();
+//                    }
+//                }
+//            }
             if (success) {
                 System.out.println("Successfully Added: " + newUser);
                 this.userIdTA.setText("");
@@ -186,6 +186,31 @@ public class AdminControlPanelWindow extends Application {
 //        button.setOnAction(e -> {
 //            System.out.println("hello world");
 //        });
+
+        lastUpdatedUserBttn.setOnAction(e-> {
+            User lastUpdatedUser = adminControlPanelSingletonInstance.getLastUpdatedUser();
+            String message;
+            if (lastUpdatedUser == null)
+                message = "A user has not been updated";
+            else
+                message = "Last updated user is: " + lastUpdatedUser.getUID();
+            new popUpDialogDisplayWindow(message, "Last Updated User").showDialogWindow();
+        });
+
+        validIDBttn.setOnAction(e -> {
+            boolean valid = this.isValid();
+            String message;
+            if (!valid){
+                message = "Users/UserGroups are not valid";
+                new popUpDialogDisplayWindow(message, "Invalid ID").showDialogWindow();
+            }
+            else{
+                message = "User/UserGroups are valid";
+                new popUpDialogDisplayWindow(message, "Valid ID").showDialogWindow();
+            }
+            System.out.println(message);
+
+        });
 
 
         //  primaryStage.setScene(new Scene(root, 300, 275));
@@ -340,5 +365,21 @@ public class AdminControlPanelWindow extends Application {
         return null;
     }
 
+
+    private boolean isValid() {
+        ArrayList<User> users = this.adminControlPanelSingletonInstance.getUsers();
+        ArrayList<UserGroup> userGroups = this.adminControlPanelSingletonInstance.getUserGroups();
+
+        for (UserGroup userGroup: userGroups){
+            if (userGroup.getUID().contains(" "))
+                return false;
+        }
+        for (User user: users){
+            if (user.getUID().contains(" "))
+                return false;
+        }
+
+        return true;
+    }
 
 }
