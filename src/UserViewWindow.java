@@ -25,6 +25,9 @@ public class UserViewWindow {
 
         this.user = user;
 
+        this.lastUpdateTime = new Label("Last Updated Time: " + user.getLastUpdateTime());
+        this.creationTime = new Label("Creation Time: " + user.getCreationTime());
+
         //creates new window
         this.stage = new Stage();
         this.layout = new AnchorPane();
@@ -34,6 +37,7 @@ public class UserViewWindow {
         this.stage.setTitle(user.getUID() + " View");
 
         this.adminControlPanelSingletonInstance = AdminControlPanel.getInstance();
+
 
     }
 
@@ -92,12 +96,14 @@ public class UserViewWindow {
                 this.newsFeed.getItems().addAll();
                 this.tweetMessageTA.setText("");
 
+                this.updateTime(System.currentTimeMillis());
+                this.adminControlPanelSingletonInstance.setLastUpdatedUser(this.user);
             }
 
         });
 
         this.setLayout();
-        this.layout.getChildren().addAll(userIdTA,tweetMessageTA,currentFollowing,newsFeed,followUserBttn,postTweetBttn);
+        this.layout.getChildren().addAll(userIdTA,tweetMessageTA,currentFollowing,newsFeed,followUserBttn,postTweetBttn, creationTime, lastUpdateTime);
 
         this.stage.show();
     }
@@ -178,5 +184,23 @@ public class UserViewWindow {
         postTweetBttn.setLayoutY(211);
         postTweetBttn.setPrefHeight(42);
         postTweetBttn.setPrefWidth(303);
+
+        creationTime.setLayoutX(15);
+        creationTime.setLayoutY(253);
+        creationTime.setPrefHeight(22);
+        creationTime.setPrefWidth(223);
+
+        lastUpdateTime.setLayoutX(323);
+        lastUpdateTime.setLayoutY(256);
+        lastUpdateTime.setPrefHeight(17);
+        lastUpdateTime.setPrefWidth(274);
+    }
+
+    //
+    private final Label creationTime;
+    private final Label lastUpdateTime;
+
+    public void updateTime(long currentTimeMillis) {
+        this.lastUpdateTime.setText("Last Updated Time: " + currentTimeMillis);
     }
 }

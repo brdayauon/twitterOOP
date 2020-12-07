@@ -16,6 +16,10 @@ public class User implements userEntity, Observer, Subject {
     public String tweets;
     private String[] positiveWords = { "good", "great", "excellent", "awesome" };
 
+    private long creationTime;
+    private long lastUpdateTime;
+
+
     /*
         A user has 1) an unique ID; 
         2) a list of user IDs that are following this user (followers); 
@@ -32,6 +36,12 @@ public class User implements userEntity, Observer, Subject {
         this.totalUsers += 1;
         this.observers = new ArrayList<>();
         this.tweets = "";
+        this.creationTime = System.currentTimeMillis();
+        this.lastUpdateTime = 0;
+    }
+
+    public long getCreationTime(){
+        return this.creationTime;
     }
 
     /*Users can choose to follow other users (not user groups) by providing the target user ID.
@@ -114,7 +124,9 @@ public class User implements userEntity, Observer, Subject {
 
         if (userViewWindow != null) {
             userViewWindow.addTweet(newTweet);
+            userViewWindow.updateTime(System.currentTimeMillis());
         }
+
 
     }
 
@@ -143,4 +155,10 @@ public class User implements userEntity, Observer, Subject {
         return this.newsFeed;
     }
 
+    public void setLastUpdateTime(long time){
+        this.lastUpdateTime = time;
+    }
+    public long getLastUpdateTime(){
+        return this.lastUpdateTime;
+    }
 }

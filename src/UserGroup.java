@@ -9,6 +9,8 @@ public class UserGroup implements userEntity {
     private ArrayList<User> users;
     private static TreeItem<userEntity> root;
 
+    private long creationTime;
+
     public UserGroup(){
         //root = new TreeItem<userEntity>("Root");
         this.totalGroups += 1;
@@ -18,6 +20,11 @@ public class UserGroup implements userEntity {
         this.totalGroups += 1;
         this.userGroupID = userGroupID;
         users = new ArrayList<>();
+        this.creationTime = System.currentTimeMillis();
+    }
+
+    public long getCreationTime(){
+        return this.creationTime;
     }
 
     public boolean addUserToUserGroup(User user){
