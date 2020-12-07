@@ -13,11 +13,14 @@ public class AdminControlPanel  {
 
     private final HashMap<String, UserViewWindow> userViewWindow;
 
+    private User lastUpdatedUser;
+
     private AdminControlPanel(){
         this.users = new ArrayList<>();
         this.uniqueGroupIDs = new ArrayList<>();
         this.tweets = new ArrayList<>();
         this.userViewWindow = new HashMap<>();
+        this.lastUpdatedUser = null; //set to null because there is no updated user yet
     }
 
     public static AdminControlPanel getInstance(){
@@ -26,6 +29,15 @@ public class AdminControlPanel  {
 
         return instance;
     }
+
+    public void setLastUpdatedUser(User user){
+        this.lastUpdatedUser = user;
+    }
+    public User getLastUpdatedUser(){
+        return this.lastUpdatedUser;
+    }
+
+
 
     //FOR TREEVIEW
     public ArrayList<User> getUsers(){
