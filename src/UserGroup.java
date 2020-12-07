@@ -50,7 +50,8 @@ public class UserGroup implements userEntity {
         return this.userGroupID;
     }
 
-    public String getUGID(User userGroupID){
-        return userGroupID.getUID();
-    }
+    //don't need cause not using
+//    public String getUGID(User userGroupID){
+//        return userGroupID.getUID();
+//    }
 }
